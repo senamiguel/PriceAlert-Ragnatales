@@ -31,10 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             pictureBox1 = new PictureBox();
             Buttons = new GroupBox();
-            label1 = new Label();
+            btnDisc = new Button();
+            button1 = new Button();
             btnGithub = new Button();
             btnComprar = new Button();
             btnVender = new Button();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             Buttons.SuspendLayout();
             SuspendLayout();
@@ -53,6 +55,9 @@
             // 
             // Buttons
             // 
+            Buttons.BackColor = Color.Transparent;
+            Buttons.Controls.Add(btnDisc);
+            Buttons.Controls.Add(button1);
             Buttons.Controls.Add(btnGithub);
             Buttons.Controls.Add(btnComprar);
             Buttons.Controls.Add(btnVender);
@@ -62,24 +67,39 @@
             Buttons.TabIndex = 1;
             Buttons.TabStop = false;
             // 
-            // label1
+            // btnDisc
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(318, 198);
-            label1.Name = "label1";
-            label1.Size = new Size(164, 30);
-            label1.TabIndex = 3;
-            label1.Text = "Alerta de Preço";
+            btnDisc.Font = new Font("Franklin Gothic Medium", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnDisc.Image = (Image)resources.GetObject("btnDisc.Image");
+            btnDisc.ImageAlign = ContentAlignment.MiddleLeft;
+            btnDisc.Location = new Point(226, 259);
+            btnDisc.Name = "btnDisc";
+            btnDisc.Size = new Size(131, 30);
+            btnDisc.TabIndex = 4;
+            btnDisc.Text = "Discord";
+            btnDisc.UseVisualStyleBackColor = true;
+            btnDisc.Click += btnDisc_Click;
+            // 
+            // button1
+            // 
+            button1.Font = new Font("Franklin Gothic Medium", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.ImageAlign = ContentAlignment.MiddleLeft;
+            button1.Location = new Point(158, 295);
+            button1.Name = "button1";
+            button1.Size = new Size(131, 30);
+            button1.TabIndex = 3;
+            button1.Text = "Buy me a coffee";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // btnGithub
             // 
             btnGithub.Font = new Font("Franklin Gothic Medium", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnGithub.Image = (Image)resources.GetObject("btnGithub.Image");
             btnGithub.ImageAlign = ContentAlignment.MiddleLeft;
-            btnGithub.Location = new Point(164, 254);
+            btnGithub.Location = new Point(89, 259);
             btnGithub.Name = "btnGithub";
-            btnGithub.Size = new Size(118, 30);
+            btnGithub.Size = new Size(131, 30);
             btnGithub.TabIndex = 2;
             btnGithub.Text = "GitHub";
             btnGithub.UseVisualStyleBackColor = true;
@@ -104,6 +124,16 @@
             btnVender.Text = "Vendendo";
             btnVender.UseVisualStyleBackColor = true;
             btnVender.Click += btnVender_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(318, 198);
+            label1.Name = "label1";
+            label1.Size = new Size(164, 30);
+            label1.TabIndex = 3;
+            label1.Text = "Alerta de Preço";
             // 
             // Form1
             // 
@@ -130,5 +160,7 @@
         private Button btnComprar;
         private Label label1;
         private Button btnGithub;
+        private Button btnDisc;
+        private Button button1;
     }
 }

@@ -95,6 +95,7 @@
             pctrItem.Location = new Point(450, 216);
             pctrItem.Name = "pctrItem";
             pctrItem.Size = new Size(140, 123);
+            pctrItem.SizeMode = PictureBoxSizeMode.CenterImage;
             pctrItem.TabIndex = 9;
             pctrItem.TabStop = false;
             // 
