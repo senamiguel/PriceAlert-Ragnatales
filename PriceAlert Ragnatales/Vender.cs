@@ -16,7 +16,6 @@ namespace PriceAlert_Ragnatales
             Consumir();
         }
 
-        
         private async void Consumir()
         {
             var items = await LoadItemsFromApi("https://raw.githubusercontent.com/joeltonguerreiro/ragnatales-items/refs/heads/main/json/data.json");
@@ -24,7 +23,6 @@ namespace PriceAlert_Ragnatales
             cmbItens.DisplayMember = "jname";
         }
 
-        
         private async Task<List<Item>> LoadItemsFromApi(string url)
         {
             using (HttpClient client = new HttpClient())
@@ -35,7 +33,6 @@ namespace PriceAlert_Ragnatales
             }
         }
 
-
         private void btnIniciar_Click(object sender, EventArgs e)
         {
             try
@@ -43,6 +40,11 @@ namespace PriceAlert_Ragnatales
                 string nomeItem = cmbItens.Text;
                 int valorAlvo = int.Parse(txtPreco.Text);
                 string contato = txtZap.Text;
+
+                string xpathSearchBox = "//*[@id=\"app\"]/div/div/div[2]/div/div[3]/label/div/div[1]/input";
+                string xpathTableRow = "//*[@id='app']/div/div/div[2]/div/div[4]/div/div/div/div/div/table/tbody/tr";
+                string xpathWhatsAppSearch = "//*[@id='side']/div[1]/div/div/div[2]/div/div[1]/p";
+                string xpathMessageBox = "//*[@id='main']/footer/div[1]/div/span/div/div[2]/div[1]/div[2]/div[1]";
 
                 IWebDriver driver = new ChromeDriver();
                 driver.Navigate().GoToUrl("https://web.whatsapp.com");
@@ -59,19 +61,18 @@ namespace PriceAlert_Ragnatales
                 List<int> Itens = new List<int>();
                 while (true)
                 {
-
-                    driver.FindElement(By.XPath("//*[@id=\"app\"]/div/div/div[2]/div/div[3]/label/div/div[1]/input")).SendKeys(nomeItem);
+                    
+                    driver.FindElement(By.XPath(xpathSearchBox)).SendKeys(nomeItem);
                     Thread.Sleep(1000);
-                    driver.FindElement(By.XPath("//*[@id=\"app\"]/div/div/div[2]/div/div[3]/label/div/div[1]/input")).SendKeys(Selenium.Keys.Enter);
+                    driver.FindElement(By.XPath(xpathSearchBox)).SendKeys(Selenium.Keys.Enter);
                     Thread.Sleep(4000);
-
 
                     int count = 1;
                     while (true)
                     {
                         try
                         {
-                            var itemL = driver.FindElement(By.XPath($"//*[@id='app']/div/div/div[2]/div/div[4]/div/div/div/div/div/table/tbody/tr[{count}]/td[3]/div/span"));
+                            var itemL = driver.FindElement(By.XPath($"{xpathTableRow}[{count}]/td[3]/div/span"));
 
                             if (string.IsNullOrEmpty(itemL.Text))
                             {
@@ -94,6 +95,7 @@ namespace PriceAlert_Ragnatales
                             break;
                         }
                     }
+
                     Itens.Sort();
                     if (Itens.Count > 0 && Itens[0] <= valorAlvo)
                     {
@@ -103,17 +105,20 @@ namespace PriceAlert_Ragnatales
                     {
                         Thread.Sleep(300000);
                         Itens.Clear();
-                        driver.FindElement(By.XPath("//*[@id=\"app\"]/div/div/div[2]/div/div[3]/label/div/div[1]/input")).Clear();
+                        driver.FindElement(By.XPath(xpathSearchBox)).Clear();
                     }
                 }
+
                 Thread.Sleep(3000);
                 driver.Navigate().GoToUrl("https://web.whatsapp.com");
                 Thread.Sleep(8000);
-                
-                driver.FindElement(By.XPath("//*[@id='side']/div[1]/div/div/div[2]/div/div[1]/p")).SendKeys(contato);
-                driver.FindElement(By.XPath("//*[@id='side']/div[1]/div/div/div[2]/div/div[1]/p")).SendKeys(Selenium.Keys.Enter);
-                driver.FindElement(By.XPath("//*[@id='main']/footer/div[1]/div/span/div/div[2]/div[1]/div[2]/div[1]")).SendKeys($"Isso é apenas um teste automatizado. Preço Item:  {Itens[0]} Zenys. Preço Alvo: {valorAlvo}");
-                driver.FindElement(By.XPath("//*[@id='main']/footer/div[1]/div/span/div/div[2]/div[1]/div[2]/div[1]")).SendKeys(Selenium.Keys.Enter);
+
+                // Usando variáveis XPath para WhatsApp
+                driver.FindElement(By.XPath(xpathWhatsAppSearch)).SendKeys(contato);
+                driver.FindElement(By.XPath(xpathWhatsAppSearch)).SendKeys(Selenium.Keys.Enter);
+                driver.FindElement(By.XPath(xpathMessageBox)).SendKeys($"Isso é apenas um teste automatizado. Preço Item:  {Itens[0]} Zenys. Preço Alvo: {valorAlvo}");
+                driver.FindElement(By.XPath(xpathMessageBox)).SendKeys(Selenium.Keys.Enter);
+
                 MessageBox.Show("Tarefa finalizada com sucesso");
                 Dispose();
             }
@@ -121,7 +126,6 @@ namespace PriceAlert_Ragnatales
             {
                 MessageBox.Show(ex.Message);
             }
-                
         }
 
         private void qrCode(IWebDriver driver)
@@ -133,7 +137,7 @@ namespace PriceAlert_Ragnatales
                     var qrElement = driver.FindElement(By.XPath("//*[@id=\"app\"]/div/div[2]/div[3]/div[1]/div/div/div[2]/div"));
                     if (qrElement == null)
                     {
-                        qrcodescan = true; 
+                        qrcodescan = true;
                     }
                 }
             }
