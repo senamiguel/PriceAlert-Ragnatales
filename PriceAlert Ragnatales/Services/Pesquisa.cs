@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Toolkit.Uwp.Notifications;
 using OpenQA.Selenium;
 
 namespace PriceAlert_Ragnatales.Services
@@ -17,7 +18,7 @@ namespace PriceAlert_Ragnatales.Services
             _cmbItens = cmbItens;
             _txtPreco = txtPreco;
         }
-        internal void AbrirSite()
+        internal void Monitorar()
         {
             string nomeItem = _cmbItens.Text;
             int valorAlvo = int.Parse(_txtPreco.Text);
@@ -71,21 +72,51 @@ namespace PriceAlert_Ragnatales.Services
                     {
                         break;
                     }
-                    Itens.Sort();
+                }
+                Itens.Sort();
 
-                    if (Itens.Count > 0 &&
-                        ((_nomeFormulario == "Vender" && Itens[0] <= valorAlvo) ||
-                         (_nomeFormulario != "Vender" && Itens[0] >= valorAlvo)))
+                if (Itens.Count > 0 &&
+                    ((_nomeFormulario == "Vender" && Itens[0] <= valorAlvo) ||
+                        (_nomeFormulario != "Vender" && Itens[Itens.Count - 1 ] >= valorAlvo)))
+                {
+                    if(_nomeFormulario == "Vender")
                     {
+                        new ToastContentBuilder()
+                            .AddHeader("itemNotification", "Item Encontrado", "0001")
+                            .AddInlineImage(new Uri("https://i.ibb.co/tP81hrN/905860117-venda-de-zeny-no-ragnatales-P710.jpg"))
+                            .AddText("🎉 Item Encontrado!")
+                            .AddText($"🔍 Nome do item: {nomeItem}")
+                            .AddText($"💰 Melhor preço: {Itens[0]}")
+                            .AddAttributionText("Ragnatales Price Alert")
+                            .Show();
+                        if (MessageBox.Show($"Item Encontrado!\nNome do item: {nomeItem}\nMelhor preço: {Itens[0]}", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                        {
+                            _driver.Quit();
+                        }
+                        
                         break;
                     }
-                    else
+                    new ToastContentBuilder()
+                        .AddHeader("itemNotification", "Item Encontrado", "0001")
+                        .AddText("🎉 Item Encontrado!")
+                        .AddText($"🔍 Nome do item: {nomeItem}")
+                        .AddText($"💰 Melhor preço: {Itens[Itens.Count - 1]}") 
+                        .AddAttributionText("Ragnatales Price Alert") 
+                        .Show();
+                    if (MessageBox.Show($"Item Encontrado!\nNome do item: {nomeItem}\nMelhor preço: {Itens[0]}", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
-                        Thread.Sleep(300000);
-                        Itens.Clear();
-                        _driver.FindElement(By.XPath(xpathSearchBox)).Clear();
+                        _driver.Quit();
                     }
+                    break;
                 }
+                else
+                {
+                    Thread.Sleep(300000); // Tentar novamente em 5 min
+                    Itens.Clear();
+                    _driver.FindElement(By.XPath(xpathSearchBox)).Clear();
+                    _driver.Navigate().Refresh();
+                }
+                
             }
         }
     }
